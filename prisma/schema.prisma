@@ -44,4 +44,14 @@ model User {
   image         String?
   Account       Account[]
   Session       Session[]
+  wooves Woof[]
+}
+
+model Woof {
+  id            String    @id @default(cuid()) @map("_id")
+  text String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
