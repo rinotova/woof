@@ -1,13 +1,13 @@
 import Woof from "../Woof/Woof";
 
-export interface Woof {
+export interface WoofType {
   id: number;
   username: string;
   woofText: string;
 }
 
 interface WoofListProps {
-  wooves: Woof[];
+  wooves: WoofType[];
 }
 
 const WoofList: React.FC<WoofListProps> = ({ wooves }) => {
