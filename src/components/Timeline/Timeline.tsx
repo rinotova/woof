@@ -1,8 +1,8 @@
 import CreateWoofForm from "../CreateWoofForm/CreateWoofForm";
-import type { Woof } from "../WoofList/WoofList";
+import type { WoofType } from "../WoofList/WoofList";
 import WoofList from "../WoofList/WoofList";
 
-const wooves: Woof[] = [
+const wooves: WoofType[] = [
   {
     id: 1,
     username: "rinotova",

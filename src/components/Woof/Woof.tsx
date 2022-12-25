@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { Woof } from "../WoofList/WoofList";
+import type { WoofType } from "../WoofList/WoofList";
 
-const Woof: React.FC<Woof> = ({ username, woofText }) => {
+const Woof: React.FC<WoofType> = ({ username, woofText }) => {
   return (
     <div className="shadow-solid relative mt-4 rounded-lg bg-gray-800 p-6 text-white shadow-lg">
       <div className="mb-4 flex items-center">
