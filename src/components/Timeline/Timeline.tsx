@@ -1,31 +1,21 @@
+import { trpc } from "../../utils/trpc";
 import CreateWoofForm from "../CreateWoofForm/CreateWoofForm";
-import type { WoofType } from "../WoofList/WoofList";
-import WoofList from "../WoofList/WoofList";
-
-const wooves: WoofType[] = [
-  {
-    id: 1,
-    username: "rinotova",
-    woofText: "first Woof",
-  },
-  {
-    id: 2,
-    username: "rinotova",
-    woofText: "second Woof",
-  },
-  {
-    id: 3,
-    username: "rinotova",
-    woofText: "third Woof",
-  },
-];
+import Woof from "../Woof/Woof";
 
 const Timeline = () => {
+  const { data, isLoading, isError } = trpc.woof.list.useQuery({});
+
   return (
-    <div>
+    <>
       <CreateWoofForm />
-      <WoofList wooves={wooves} />
-    </div>
+      {!isLoading && !isError && (
+        <div className="mx-auto max-w-4xl p-4">
+          {data.wooves.map((woof) => {
+            return <Woof key={woof.id} woof={woof} />;
+          })}
+        </div>
+      )}
+    </>
   );
 };
 
