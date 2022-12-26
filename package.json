@@ -12,11 +12,11 @@
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.5.0",
-    "@tanstack/react-query": "^4.16.0",
-    "@trpc/client": "^10.0.0",
-    "@trpc/next": "^10.0.0",
-    "@trpc/react-query": "^10.0.0",
-    "@trpc/server": "^10.0.0",
+    "@tanstack/react-query": "4.20.4",
+    "@trpc/client": "10.7.0",
+    "@trpc/next": "10.7.0",
+    "@trpc/react-query": "10.7.0",
+    "@trpc/server": "10.7.0",
     "dayjs": "^1.11.7",
     "next": "13.0.2",
     "next-auth": "^4.18.3",
@@ -44,8 +44,5 @@
   },
   "ct3aMetadata": {
     "initVersion": "6.11.4"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }
