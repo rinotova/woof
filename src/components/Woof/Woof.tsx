@@ -1,5 +1,29 @@
+import dayjs from "dayjs";
 import Image from "next/image";
 import type { RouterOutputs } from "../../utils/trpc";
+import relativeTime from "dayjs/plugin/relativeTime";
+import updateLocale from "dayjs/plugin/updateLocale";
+
+dayjs.extend(relativeTime);
+dayjs.extend(updateLocale);
+
+dayjs.updateLocale("en", {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: "1m",
+    m: "1m",
+    mm: "%dm",
+    h: "1h",
+    hh: "%dh",
+    d: "1d",
+    dd: "%dd",
+    M: "1M",
+    MM: "%dM",
+    y: "1y",
+    yy: "%dy",
+  },
+});
 
 const Woof = ({
   woof,
@@ -19,9 +43,10 @@ const Woof = ({
           />
         )}
 
-        <div className="text-lg font-bold">{woof.author.name}</div>
+        <p className="text-lg font-bold">{woof.author.name}</p>
+        <p className="ml-2 text-base">- {dayjs(woof.createdAt).fromNow()}</p>
       </div>
-      <div className="text-gray-300">{woof.text}</div>
+      <p className="text-gray-300">{woof.text}</p>
       <div className="mt-4 flex justify-between">
         <div className="text-xs text-gray-500">
           <span className="font-bold text-green-500">15</span> retweets

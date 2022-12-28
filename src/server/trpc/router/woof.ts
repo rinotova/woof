@@ -36,6 +36,7 @@ export const woofRouter = router({
             createdAt: "desc",
           },
         ],
+        cursor: cursor ? { id: cursor } : undefined,
         include: {
           author: {
             select: {
@@ -47,8 +48,16 @@ export const woofRouter = router({
         },
       });
 
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      if (wooves.length > limit) {
+        const nextItem = wooves.pop() as typeof wooves[number];
+        nextCursor = nextItem.id;
+      }
+
       return {
         wooves,
+        nextCursor,
       };
     }),
 });
