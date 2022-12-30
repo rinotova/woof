@@ -1,8 +1,10 @@
 import dayjs from "dayjs";
 import Image from "next/image";
 import type { RouterOutputs } from "../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -30,6 +32,28 @@ const Woof = ({
 }: {
   woof: RouterOutputs["woof"]["list"]["wooves"][number];
 }) => {
+  const isWolfLiked = woof.likes.length > 0;
+  const [isLiked, setIsLiked] = useState(isWolfLiked);
+  const { mutateAsync: likeMutateAsync } = trpc.woof.like.useMutation({
+    onSuccess: () => {
+      setIsLiked(true);
+    },
+  });
+
+  const { mutateAsync: unLikeMutateAsync } = trpc.woof.unlike.useMutation({
+    onSuccess: () => {
+      setIsLiked(false);
+    },
+  });
+
+  const likeWoofHandler = (woofId: string) => {
+    likeMutateAsync({ woofId });
+  };
+
+  const unLikeWoofHandler = (woofId: string) => {
+    unLikeMutateAsync({ woofId });
+  };
+
   return (
     <div className="shadow-solid relative mt-4 rounded-lg bg-gray-800 p-6 text-white shadow-lg">
       <div className="mb-4 flex items-center">
@@ -57,10 +81,17 @@ const Woof = ({
       </div>
       <div className="mt-4">
         <button className="rounded-full bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400">
-          Retweet
+          Rewolf
         </button>
-        <button className="ml-4 rounded-full bg-pink-500 px-4 py-2 font-bold text-white hover:bg-pink-400">
-          Like
+        <button
+          onClick={
+            isLiked
+              ? unLikeWoofHandler.bind(null, woof.id)
+              : likeWoofHandler.bind(null, woof.id)
+          }
+          className="ml-4 rounded-full bg-pink-500 px-4 py-2 font-bold text-white hover:bg-pink-400"
+        >
+          {isLiked ? "Unlike" : "Like"}
         </button>
       </div>
     </div>

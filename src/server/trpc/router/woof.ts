@@ -19,6 +19,52 @@ export const woofRouter = router({
       },
     });
   }),
+  like: protectedProcedure
+    .input(
+      z.object({
+        woofId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { woofId } = input;
+      const userId = session.user.id;
+
+      return prisma.like.create({
+        data: {
+          woof: {
+            connect: {
+              id: woofId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+    }),
+  unlike: protectedProcedure
+    .input(
+      z.object({
+        woofId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { woofId } = input;
+      const userId = session.user.id;
+
+      return prisma.like.delete({
+        where: {
+          woofId_userId: {
+            woofId,
+            userId,
+          },
+        },
+      });
+    }),
   list: publicProcedure
     .input(
       z.object({
@@ -27,8 +73,9 @@ export const woofRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { prisma } = ctx;
+      const { prisma, session } = ctx;
       const { cursor, limit } = input;
+      const userId = session?.user?.id;
       const wooves = await prisma.woof.findMany({
         take: limit + 1,
         orderBy: [
@@ -43,6 +90,14 @@ export const woofRouter = router({
               name: true,
               image: true,
               id: true,
+            },
+          },
+          likes: {
+            where: {
+              userId,
+            },
+            select: {
+              userId: true,
             },
           },
         },

@@ -14,8 +14,14 @@ export const WoofSchema = object({
 function CreateWoofForm() {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
+  const utils = trpc.useContext();
 
-  const { mutateAsync } = trpc.woof.create.useMutation();
+  const { mutateAsync } = trpc.woof.create.useMutation({
+    onSuccess: () => {
+      setText("");
+      utils.woof.list.invalidate();
+    },
+  });
 
   const createWoof = async (e: FormEvent) => {
     e.preventDefault();
