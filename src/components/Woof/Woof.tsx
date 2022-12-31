@@ -34,25 +34,35 @@ const Woof = ({
 }) => {
   const isWolfLiked = woof.likes.length > 0;
   const [isLiked, setIsLiked] = useState(isWolfLiked);
+  const [likes, setLikes] = useState(woof._count.likes);
+
+  const utils = trpc.useContext();
+
+  // Like woof
+  const likeWoofHandler = (woofId: string) => likeMutateAsync({ woofId });
+
   const { mutateAsync: likeMutateAsync } = trpc.woof.like.useMutation({
-    onSuccess: () => {
+    onMutate: () => {
       setIsLiked(true);
+      setLikes((prevLikesCount) => prevLikesCount + 1);
+    },
+    onError: () => {
+      utils.woof.list.invalidate();
     },
   });
+
+  // Unlike woof
+  const unLikeWoofHandler = (woofId: string) => unLikeMutateAsync({ woofId });
 
   const { mutateAsync: unLikeMutateAsync } = trpc.woof.unlike.useMutation({
-    onSuccess: () => {
+    onMutate: () => {
       setIsLiked(false);
+      setLikes((prevLikesCount) => (prevLikesCount - 1 >= 0 ? 0 : 0));
+    },
+    onError: () => {
+      utils.woof.list.invalidate();
     },
   });
-
-  const likeWoofHandler = (woofId: string) => {
-    likeMutateAsync({ woofId });
-  };
-
-  const unLikeWoofHandler = (woofId: string) => {
-    unLikeMutateAsync({ woofId });
-  };
 
   return (
     <div className="shadow-solid relative mt-4 rounded-lg bg-gray-800 p-6 text-white shadow-lg">
@@ -76,7 +86,7 @@ const Woof = ({
           <span className="font-bold text-green-500">15</span> retweets
         </div>
         <div className="text-xs text-gray-500">
-          <span className="font-bold text-pink-500">25</span> likes
+          <span className="font-bold text-pink-500">{likes}</span> likes
         </div>
       </div>
       <div className="mt-4">

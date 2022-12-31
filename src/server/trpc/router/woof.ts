@@ -45,6 +45,48 @@ export const woofRouter = router({
         },
       });
     }),
+  getById: protectedProcedure
+    .input(
+      z.object({
+        woofId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { woofId } = input;
+      const userId = session.user.id;
+      const woof = await prisma.woof.findUnique({
+        where: {
+          id: woofId,
+        },
+        include: {
+          author: {
+            select: {
+              name: true,
+              image: true,
+              id: true,
+            },
+          },
+          likes: {
+            where: {
+              userId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
+        },
+      });
+
+      return {
+        woof,
+      };
+    }),
   unlike: protectedProcedure
     .input(
       z.object({
@@ -98,6 +140,11 @@ export const woofRouter = router({
             },
             select: {
               userId: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
             },
           },
         },
