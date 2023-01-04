@@ -1,22 +1,26 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import type { RouterInputs} from "../../utils/trpc";
 import { trpc } from "../../utils/trpc";
 import CreateWoofForm from "../CreateWoofForm/CreateWoofForm";
 import Woof from "../Woof/Woof";
 
-const Timeline = () => {
+const Timeline = ({ where = {} }: { where: RouterInputs['woof']['list']['where'] }) => {
   const { data, hasNextPage, fetchNextPage } = trpc.woof.list.useInfiniteQuery(
-    {},
+    {
+      where,
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
 
   const wooves = data?.pages?.flatMap((page) => page.wooves) ?? [];
-  console.log(wooves);
+  const {data: session} = useSession();
+
   return (
     <>
-      <CreateWoofForm />
+      {session && <CreateWoofForm />}
 
       <InfiniteScroll
         dataLength={wooves.length}

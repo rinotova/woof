@@ -45,48 +45,6 @@ export const woofRouter = router({
         },
       });
     }),
-  getById: protectedProcedure
-    .input(
-      z.object({
-        woofId: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { prisma, session } = ctx;
-      const { woofId } = input;
-      const userId = session.user.id;
-      const woof = await prisma.woof.findUnique({
-        where: {
-          id: woofId,
-        },
-        include: {
-          author: {
-            select: {
-              name: true,
-              image: true,
-              id: true,
-            },
-          },
-          likes: {
-            where: {
-              userId,
-            },
-            select: {
-              userId: true,
-            },
-          },
-          _count: {
-            select: {
-              likes: true,
-            },
-          },
-        },
-      });
-
-      return {
-        woof,
-      };
-    }),
   unlike: protectedProcedure
     .input(
       z.object({
@@ -110,16 +68,22 @@ export const woofRouter = router({
   list: publicProcedure
     .input(
       z.object({
+        where: z.object({
+          author: z.object({
+            name: z.string().optional(),
+          }).optional()
+        }).optional(),
         cursor: z.string().nullish(),
         limit: z.number().min(1).max(100).default(10),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
-      const { cursor, limit } = input;
+      const { cursor, limit, where } = input;
       const userId = session?.user?.id;
       const wooves = await prisma.woof.findMany({
         take: limit + 1,
+        where,
         orderBy: [
           {
             createdAt: "desc",

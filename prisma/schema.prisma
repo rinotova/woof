@@ -45,7 +45,7 @@ model User {
   Account       Account[]
   Session       Session[]
   wooves Woof[]
-  likes Like[]
+  likes Like[] 
 }
 
 model Woof {
