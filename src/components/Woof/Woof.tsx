@@ -89,22 +89,19 @@ const Woof = ({
       <div className="shadow-solid relative mt-4 rounded-lg bg-gray-800 p-6 text-white shadow-lg">
         <div className="mb-4 flex items-center">
           {woof.author.image && (
-            <Image
-              src={woof.author.image}
-              alt="avatar"
-              className="mr-4 h-12 w-12 rounded-full"
-              width={120}
-              height={120}
-            />
+            <Link href={`${woof.author.name}`}>
+              <Image
+                src={woof.author.image}
+                alt="avatar"
+                className="mr-4 h-12 w-12 rounded-full"
+                width={120}
+                height={120}
+              />
+            </Link>
           )}
 
           <p className="text-lg font-bold">
-            <Link
-              href={`${woof.author.name}`}
-              as={`${woof.author.name?.replace(" ", "").toLowerCase()}`}
-            >
-              {woof.author.name}
-            </Link>
+            <Link href={`${woof.author.name}`}>{woof.author.name}</Link>
           </p>
           <p className="ml-2 text-base">- {dayjs(woof.createdAt).fromNow()}</p>
         </div>
