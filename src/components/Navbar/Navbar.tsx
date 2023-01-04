@@ -1,4 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import React from "react";
 
 function NavBar() {
@@ -10,7 +11,9 @@ function NavBar() {
   return (
     <nav className="mb-6 bg-pink-600 py-4 px-6 text-xl font-bold text-white">
       <div className="container mx-auto flex justify-between">
-        <h1 className="text-black">Woof</h1>
+        <Link href="/">
+          <h1 className="text-black">Woof</h1>
+        </Link>
         {!session && (
           <button className="ml-auto block" onClick={signInHandler}>
             Sign in
