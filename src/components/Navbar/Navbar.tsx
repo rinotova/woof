@@ -2,9 +2,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import React from "react";
 
 function NavBar() {
-  const { data: session} = useSession();
+  const { data: session } = useSession();
   const signInHandler = () => {
-    void signIn("google", { callbackUrl: "http://localhost:3000" });
+    void signIn("google", { callbackUrl: `${process.env.NEXTAUTH_URL}` });
   };
 
   return (
