@@ -13,26 +13,26 @@ export const WoofSchema = object({
 
 function CreateWoofForm() {
   const [text, setText] = useState("");
-  const [error, setError] = useState("");
   const utils = trpc.useContext();
 
-  const { mutateAsync } = trpc.woof.create.useMutation({
+  const { mutateAsync, isLoading } = trpc.woof.create.useMutation({
     onSuccess: () => {
       setText("");
       utils.woof.list.invalidate();
     },
   });
 
-  const createWoof = async (e: FormEvent) => {
+  const createWoof = (e: FormEvent) => {
     e.preventDefault();
-
-    try {
-      await WoofSchema.parse({ text });
-    } catch (e: any) {
-      setError(e.message);
+    if (isLoading) {
       return;
     }
 
+    try {
+      WoofSchema.parse({ text });
+    } catch (e: any) {
+      return;
+    }
     mutateAsync({ text });
   };
   return (
@@ -54,7 +54,6 @@ function CreateWoofForm() {
           Woof
         </button>
       </form>
-      {error && <p>{JSON.stringify(error)}</p>}
     </>
   );
 }
